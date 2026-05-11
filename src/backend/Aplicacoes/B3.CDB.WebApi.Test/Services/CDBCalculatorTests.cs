@@ -20,14 +20,14 @@ namespace B3.CDB.WebApi.Test.Services
             decimal valorInicial = 10000;
             int meses = 12;
             // Fator mensal = 1 + (0.009 * 1.08) = 1.00972
-            // Após 12 meses: 10000 * (1.00972)^12 ? 11.231
+            // ApÃ³s 12 meses: 10000 * (1.00972)^12 â‰ˆ 11.231
 
             // Act
             decimal resultado = _calculator.CalcularValorFinal(valorInicial, meses);
 
             // Assert
             Assert.True(resultado > valorInicial);
-            // Tolerância ampla para precisão decimal
+            // TolerÃ¢ncia ampla para precisÃ£o decimal
             Assert.True(resultado > 11000 && resultado < 11500);
         }
 
@@ -106,7 +106,7 @@ namespace B3.CDB.WebApi.Test.Services
             decimal resultado2Meses = _calculator.CalcularValorFinal(resultado1Mes, 2);
             decimal resultadoDiretamente = _calculator.CalcularValorFinal(valorInicial, 4);
 
-            // Assert - O resultado de aplicar 2 meses duas vezes deve ser próximo ao de 4 meses
+            // Assert - O resultado de aplicar 2 meses duas vezes deve ser prÃ³ximo ao de 4 meses
             Assert.True(Math.Abs(resultado2Meses - resultadoDiretamente) < 0.01m);
         }
 
@@ -255,17 +255,17 @@ namespace B3.CDB.WebApi.Test.Services
 
         #endregion
 
-        #region Testes ObtenerAliquotaImposto
+        #region Testes ObterAliquotaImposto
 
         [Theory]
         [InlineData(1, 0.225)]
         [InlineData(2, 0.225)]
         [InlineData(3, 0.225)]
         [InlineData(6, 0.225)]
-        public void ObtenerAliquotaImposto_ComAte6Meses_DeveRetornar22Porcento(int meses, decimal aliquotaEsperada)
+        public void ObterAliquotaImposto_ComAte6Meses_DeveRetornar22Porcento(int meses, decimal aliquotaEsperada)
         {
             // Act
-            decimal aliquota = _calculator.ObtenerAliquotaImposto(meses);
+            decimal aliquota = _calculator.ObterAliquotaImposto(meses);
 
             // Assert
             Assert.Equal(aliquotaEsperada, aliquota);
@@ -275,10 +275,10 @@ namespace B3.CDB.WebApi.Test.Services
         [InlineData(7, 0.20)]
         [InlineData(9, 0.20)]
         [InlineData(12, 0.20)]
-        public void ObtenerAliquotaImposto_ComAte12Meses_DeveRetornar20Porcento(int meses, decimal aliquotaEsperada)
+        public void ObterAliquotaImposto_ComAte12Meses_DeveRetornar20Porcento(int meses, decimal aliquotaEsperada)
         {
             // Act
-            decimal aliquota = _calculator.ObtenerAliquotaImposto(meses);
+            decimal aliquota = _calculator.ObterAliquotaImposto(meses);
 
             // Assert
             Assert.Equal(aliquotaEsperada, aliquota);
@@ -288,10 +288,10 @@ namespace B3.CDB.WebApi.Test.Services
         [InlineData(13, 0.175)]
         [InlineData(18, 0.175)]
         [InlineData(24, 0.175)]
-        public void ObtenerAliquotaImposto_ComAte24Meses_DeveRetornar17Porcento(int meses, decimal aliquotaEsperada)
+        public void ObterAliquotaImposto_ComAte24Meses_DeveRetornar17Porcento(int meses, decimal aliquotaEsperada)
         {
             // Act
-            decimal aliquota = _calculator.ObtenerAliquotaImposto(meses);
+            decimal aliquota = _calculator.ObterAliquotaImposto(meses);
 
             // Assert
             Assert.Equal(aliquotaEsperada, aliquota);
@@ -302,10 +302,10 @@ namespace B3.CDB.WebApi.Test.Services
         [InlineData(36, 0.15)]
         [InlineData(60, 0.15)]
         [InlineData(120, 0.15)]
-        public void ObtenerAliquotaImposto_ComAcimaDe24Meses_DeveRetornar15Porcento(int meses, decimal aliquotaEsperada)
+        public void ObterAliquotaImposto_ComAcimaDe24Meses_DeveRetornar15Porcento(int meses, decimal aliquotaEsperada)
         {
             // Act
-            decimal aliquota = _calculator.ObtenerAliquotaImposto(meses);
+            decimal aliquota = _calculator.ObterAliquotaImposto(meses);
 
             // Assert
             Assert.Equal(aliquotaEsperada, aliquota);
@@ -327,7 +327,7 @@ namespace B3.CDB.WebApi.Test.Services
 
             // Assert
             Assert.True(valorLiquido > valorInicial);
-            // Verificar que é menor que o bruto
+            // Verificar que Ã© menor que o bruto
             decimal valorFinal = _calculator.CalcularValorFinal(valorInicial, meses);
             Assert.True(valorLiquido < valorFinal);
         }
@@ -382,7 +382,7 @@ namespace B3.CDB.WebApi.Test.Services
         {
             // Arrange
             decimal valorInicial = 10000;
-            int meses = 3; // Alíquota 22,5%
+            int meses = 3; // AlÃ­quota 22,5%
 
             // Act
             decimal valorLiquido = _calculator.CalcularValorLiquido(valorInicial, meses);
@@ -400,16 +400,16 @@ namespace B3.CDB.WebApi.Test.Services
             decimal valorInicial = 10000;
 
             // Act
-            // Para 3 meses: alíquota 22,5%
+            // Para 3 meses: alÃ­quota 22,5%
             decimal rendimento3 = _calculator.CalcularRendimento(10000, 3);
             decimal imposto3 = _calculator.CalcularImposto(10000, 3);
 
-            // Para 36 meses: alíquota 15%
+            // Para 36 meses: alÃ­quota 15%
             decimal rendimento36 = _calculator.CalcularRendimento(valorInicial, 36);
             decimal imposto36 = _calculator.CalcularImposto(valorInicial, 36);
 
             // Assert
-            // Verificar que a alíquota aplicada é menor em períodos maiores (imposto / rendimento)
+            // Verificar que a alÃ­quota aplicada Ã© menor em perÃ­odos maiores (imposto / rendimento)
             decimal aliquotaAplicada3 = imposto3 / rendimento3;
             decimal aliquotaAplicada36 = imposto36 / rendimento36;
 
@@ -418,7 +418,7 @@ namespace B3.CDB.WebApi.Test.Services
 
         #endregion
 
-        #region Testes de Integração
+        #region Testes de IntegraÃ§Ã£o
 
         [Fact]
         public void Fluxo_Completo_VerificaCoerenciaEntreTodasAsOperacoes()
@@ -430,7 +430,7 @@ namespace B3.CDB.WebApi.Test.Services
             // Act
             decimal valorFinal = _calculator.CalcularValorFinal(valorInicial, meses);
             decimal rendimento = _calculator.CalcularRendimento(valorInicial, meses);
-            decimal aliquota = _calculator.ObtenerAliquotaImposto(meses);
+            decimal aliquota = _calculator.ObterAliquotaImposto(meses);
             decimal imposto = _calculator.CalcularImposto(valorInicial, meses);
             decimal valorLiquido = _calculator.CalcularValorLiquido(valorInicial, meses);
 
@@ -444,10 +444,10 @@ namespace B3.CDB.WebApi.Test.Services
             // 3. Imposto deve ser rendimento * aliquota
             Assert.Equal(rendimento * aliquota, imposto, precision: 2);
 
-            // 4. Valor líquido deve ser valor final - imposto
+            // 4. Valor lÃ­quido deve ser valor final - imposto
             Assert.Equal(valorFinal - imposto, valorLiquido, precision: 2);
 
-            // 5. Rendimento líquido deve ser valor líquido - valor inicial
+            // 5. Rendimento lÃ­quido deve ser valor lÃ­quido - valor inicial
             decimal rendimentoLiquido = valorLiquido - valorInicial;
             Assert.Equal(rendimento - imposto, rendimentoLiquido, precision: 2);
         }
@@ -463,7 +463,7 @@ namespace B3.CDB.WebApi.Test.Services
             // Act
             decimal valorFinal = _calculator.CalcularValorFinal(valorInicial, meses);
             decimal rendimento = _calculator.CalcularRendimento(valorInicial, meses);
-            decimal aliquota = _calculator.ObtenerAliquotaImposto(meses);
+            decimal aliquota = _calculator.ObterAliquotaImposto(meses);
             decimal imposto = _calculator.CalcularImposto(valorInicial, meses);
             decimal valorLiquido = _calculator.CalcularValorLiquido(valorInicial, meses);
 
@@ -477,7 +477,7 @@ namespace B3.CDB.WebApi.Test.Services
         }
 
         [Fact]
-        public void Fluxo_Comparacao_EntrePeríodosCurtos_E_Longos()
+        public void Fluxo_Comparacao_EntrePerÃ­odosCurtos_E_Longos()
         {
             // Arrange
             decimal valorInicial = 10000;
@@ -490,14 +490,18 @@ namespace B3.CDB.WebApi.Test.Services
             decimal impostoLongo = _calculator.CalcularImposto(valorInicial, 36);
 
             // Assert
-            // Períodos mais longos têm maior rendimento
+            // PerÃ­odos mais longos tÃªm maior rendimento
             Assert.True(rendimentoLongo > rendimentoCurto);
 
-            // Alíquotas menores em períodos maiores, mas pode ter mais imposto em valor absoluto
+            // AlÃ­quotas menores em perÃ­odos maiores, mas pode ter mais imposto em valor absoluto
             // devido ao maior rendimento
-            decimal aliquotaCurta = _calculator.ObtenerAliquotaImposto(3);
-            decimal aliquotaLonga = _calculator.ObtenerAliquotaImposto(36);
+            decimal aliquotaCurta = _calculator.ObterAliquotaImposto(3);
+            decimal aliquotaLonga = _calculator.ObterAliquotaImposto(36);
             Assert.True(aliquotaCurta > aliquotaLonga);
+
+            // Suppress unused variable warnings
+            _ = impostoCurto;
+            _ = impostoLongo;
         }
 
         #endregion

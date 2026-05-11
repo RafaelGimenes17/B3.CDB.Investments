@@ -4,93 +4,208 @@
         <name>B3.CDB.WebApi</name>
     </assembly>
     <members>
-        <member name="M:B3.CDB.WebApi.Controllers.CDBController.CalcularValorFinal(B3.CDB.WebApi.Controllers.CalculoCDBRequest)">
+        <member name="T:B3.CDB.WebApi.Configurations.ApiConfig">
             <summary>
-            Calcula o valor final de um investimento em CDB
+            Configurações gerais da API, incluindo CORS e comportamento do modelo.
             </summary>
-            <param name="request">Dados do investimento com valor inicial e número de meses</param>
-            <returns>Valor final do investimento</returns>
         </member>
-        <member name="M:B3.CDB.WebApi.Controllers.CDBController.CalcularRendimento(B3.CDB.WebApi.Controllers.CalculoCDBRequest)">
+        <member name="M:B3.CDB.WebApi.Configurations.ApiConfig.AddApiConfig(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
-            Calcula o rendimento de um investimento em CDB
+            Adiciona as configurações da API ao contêiner de serviços.
             </summary>
-            <param name="request">Dados do investimento com valor inicial e número de meses</param>
-            <returns>Rendimento total</returns>
+            <param name="services">Coleção de serviços da aplicação.</param>
+            <param name="configuration">Configurações da aplicação.</param>
+            <returns>A coleção de serviços atualizada.</returns>
         </member>
-        <member name="M:B3.CDB.WebApi.Controllers.CDBController.CalcularImposto(B3.CDB.WebApi.Controllers.CalculoCDBRequest)">
+        <member name="T:B3.CDB.WebApi.Configurations.SwaggerConfig">
             <summary>
-            Calcula o imposto sobre o rendimento de um investimento em CDB
+            Configurações do Swagger/OpenAPI para documentação da API.
             </summary>
-            <param name="request">Dados do investimento com valor inicial e número de meses</param>
-            <returns>Valor do imposto</returns>
         </member>
-        <member name="M:B3.CDB.WebApi.Controllers.CDBController.CalcularValorLiquido(B3.CDB.WebApi.Controllers.CalculoCDBRequest)">
+        <member name="M:B3.CDB.WebApi.Configurations.SwaggerConfig.AddSwaggerConfig(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
-            Calcula o valor líquido final de um investimento em CDB
+            Adiciona as configurações do Swagger ao contêiner de serviços.
             </summary>
-            <param name="request">Dados do investimento com valor inicial e número de meses</param>
-            <returns>Valor final líquido após dedução do imposto</returns>
+            <param name="services">Coleção de serviços da aplicação.</param>
+            <returns>A coleção de serviços atualizada.</returns>
         </member>
-        <member name="M:B3.CDB.WebApi.Controllers.CDBController.ObtenerAliquotaImposto(System.Int32)">
+        <member name="T:B3.CDB.WebApi.Controllers.CDBController">
             <summary>
-            Obtém a alíquota de imposto para um período específico
+            Controller responsável pelo cálculo de investimentos em CDB.
             </summary>
-            <param name="meses">Número de meses do investimento</param>
-            <returns>Alíquota de imposto em decimal</returns>
         </member>
-        <member name="M:B3.CDB.WebApi.Controllers.CDBController.Calcular(B3.CDB.WebApi.Controllers.CalculoCDBRequest)">
+        <member name="M:B3.CDB.WebApi.Controllers.CDBController.#ctor(B3.CDB.WebApi.Services.ICDBService)">
+            <summary>
+            Inicializa uma nova instância de <see cref="T:B3.CDB.WebApi.Controllers.CDBController"/>.
+            </summary>
+            <param name="cdbService">Serviço de cálculo de CDB.</param>
+            <exception cref="T:System.ArgumentNullException">Lançada quando <paramref name="cdbService"/> é nulo.</exception>
+        </member>
+        <member name="M:B3.CDB.WebApi.Controllers.CDBController.Calcular(B3.CDB.WebApi.DTOs.CalculoCDBRequest)">
             <summary>
             Calcula o investimento em CDB retornando resultado bruto e líquido
             </summary>
             <param name="request">Dados do investimento com valor inicial e número de meses</param>
             <returns>Resultado detalhado do investimento com valores bruto e líquido</returns>
         </member>
+        <member name="T:B3.CDB.WebApi.DTOs.CalculoCDBRequest">
+            <summary>
+            Dados de entrada para o cálculo de investimento em CDB.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CalculoCDBRequest.ValorInicial">
+            <summary>
+            Valor inicial do investimento em reais. Deve ser maior que zero.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CalculoCDBRequest.Meses">
+            <summary>
+            Prazo do investimento em meses. Deve ser maior que 1.
+            </summary>
+        </member>
+        <member name="T:B3.CDB.WebApi.DTOs.CDBResultadoResponse">
+            <summary>
+            Resposta completa do cálculo de investimento em CDB, contendo resultados bruto e líquido.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CDBResultadoResponse.ValorInicial">
+            <summary>
+            Valor inicial do investimento em reais.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CDBResultadoResponse.Meses">
+            <summary>
+            Prazo do investimento em meses.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CDBResultadoResponse.Aliquota">
+            <summary>
+            Alíquota de Imposto de Renda aplicada, em percentual (ex: 20 para 20%).
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CDBResultadoResponse.ResultadoBruto">
+            <summary>
+            Resultado bruto do investimento (antes do desconto do IR).
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CDBResultadoResponse.ResultadoLiquido">
+            <summary>
+            Resultado líquido do investimento (após o desconto do IR).
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.CDBResultadoResponse.Imposto">
+            <summary>
+            Valor do Imposto de Renda descontado em reais.
+            </summary>
+        </member>
+        <member name="T:B3.CDB.WebApi.DTOs.ResultadoDetalhadoResponse">
+            <summary>
+            Detalhe de um resultado de investimento, contendo o valor total e o rendimento.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.ResultadoDetalhadoResponse.Valor">
+            <summary>
+            Valor total do investimento ao final do período em reais.
+            </summary>
+        </member>
+        <member name="P:B3.CDB.WebApi.DTOs.ResultadoDetalhadoResponse.Rendimento">
+            <summary>
+            Rendimento obtido no período em reais (Valor Final - Valor Inicial).
+            </summary>
+        </member>
+        <member name="T:B3.CDB.WebApi.Services.CDBCalculator">
+            <summary>
+            Responsável pelos cálculos matemáticos de investimentos em CDB,
+            incluindo valor final, rendimento, alíquota de IR e valor líquido.
+            </summary>
+        </member>
+        <member name="F:B3.CDB.WebApi.Services.CDBCalculator.FatorMensal">
+            <summary>
+            Fator de crescimento mensal pré-calculado: 1 + (CDI × TB).
+            Calculado uma única vez como campo estático para evitar recálculo a cada chamada.
+            </summary>
+        </member>
         <member name="M:B3.CDB.WebApi.Services.CDBCalculator.CalcularValorFinal(System.Decimal,System.Int32)">
             <summary>
             Calcula o valor final de um investimento em CDB com base no valor inicial e número de meses.
-            Utiliza a fórmula: VF = VI × [1 + (CDI × TB)]
+            Utiliza a fórmula: VF = VI × [1 + (CDI × TB)]^n
             O cálculo é realizado mês a mês, onde os rendimentos de cada mês são utilizados para calcular o mês seguinte.
             </summary>
-            <param name="valorInicial">Valor inicial do investimento</param>
-            <param name="meses">Número de meses para aplicar o cálculo</param>
-            <returns>Valor final do investimento após os meses especificados</returns>
+            <param name="valorInicial">Valor inicial do investimento.</param>
+            <param name="meses">Número de meses para aplicar o cálculo.</param>
+            <returns>Valor final do investimento após os meses especificados.</returns>
+            <exception cref="T:System.ArgumentException">
+            Lançada quando <paramref name="valorInicial"/> é menor ou igual a zero,
+            ou quando <paramref name="meses"/> é menor ou igual a 1.
+            </exception>
         </member>
         <member name="M:B3.CDB.WebApi.Services.CDBCalculator.CalcularRendimento(System.Decimal,System.Int32)">
             <summary>
             Calcula o rendimento total obtido no investimento em CDB.
             </summary>
-            <param name="valorInicial">Valor inicial do investimento</param>
-            <param name="meses">Número de meses para aplicar o cálculo</param>
-            <returns>Rendimento total (Valor Final - Valor Inicial)</returns>
+            <param name="valorInicial">Valor inicial do investimento.</param>
+            <param name="meses">Número de meses para aplicar o cálculo.</param>
+            <returns>Rendimento total (Valor Final - Valor Inicial).</returns>
         </member>
-        <member name="M:B3.CDB.WebApi.Services.CDBCalculator.ObtenerAliquotaImposto(System.Int32)">
+        <member name="M:B3.CDB.WebApi.Services.CDBCalculator.ObterAliquotaImposto(System.Int32)">
             <summary>
-            Obtém a alíquota de imposto (IR) baseada no número de meses.
+            Obtém a alíquota de Imposto de Renda (IR) baseada no número de meses.
             Tabela progressiva:
-            - Até 6 meses: 22,5%
-            - Até 12 meses: 20%
-            - Até 24 meses: 17,5%
-            - Acima de 24 meses: 15%
+            <list type="bullet">
+              <item><description>Até 6 meses: 22,5%</description></item>
+              <item><description>Até 12 meses: 20%</description></item>
+              <item><description>Até 24 meses: 17,5%</description></item>
+              <item><description>Acima de 24 meses: 15%</description></item>
+            </list>
             </summary>
-            <param name="meses">Número de meses do investimento</param>
-            <returns>Alíquota de imposto em decimal (ex: 0.225 para 22,5%)</returns>
+            <param name="meses">Número de meses do investimento.</param>
+            <returns>Alíquota de imposto em decimal (ex: 0.225 para 22,5%).</returns>
         </member>
         <member name="M:B3.CDB.WebApi.Services.CDBCalculator.CalcularImposto(System.Decimal,System.Int32)">
             <summary>
-            Calcula o valor do imposto (IR) sobre o rendimento do CDB.
+            Calcula o valor do Imposto de Renda (IR) sobre o rendimento do CDB.
             </summary>
-            <param name="valorInicial">Valor inicial do investimento</param>
-            <param name="meses">Número de meses para aplicar o cálculo</param>
-            <returns>Valor do imposto em reais</returns>
+            <param name="valorInicial">Valor inicial do investimento.</param>
+            <param name="meses">Número de meses para aplicar o cálculo.</param>
+            <returns>Valor do imposto em reais.</returns>
         </member>
         <member name="M:B3.CDB.WebApi.Services.CDBCalculator.CalcularValorLiquido(System.Decimal,System.Int32)">
             <summary>
             Calcula o valor líquido final (após dedução do imposto) do investimento em CDB.
             </summary>
-            <param name="valorInicial">Valor inicial do investimento</param>
-            <param name="meses">Número de meses para aplicar o cálculo</param>
-            <returns>Valor final líquido (Valor Final - Imposto)</returns>
+            <param name="valorInicial">Valor inicial do investimento.</param>
+            <param name="meses">Número de meses para aplicar o cálculo.</param>
+            <returns>Valor final líquido (Valor Final - Imposto).</returns>
+        </member>
+        <member name="T:B3.CDB.WebApi.Services.CDBService">
+            <summary>
+            Implementação do serviço de cálculo de CDB.
+            Orquestra as chamadas ao <see cref="T:B3.CDB.WebApi.Services.CDBCalculator"/>, aplica arredondamentos
+            financeiros e monta o DTO de resposta completo.
+            </summary>
+        </member>
+        <member name="M:B3.CDB.WebApi.Services.CDBService.#ctor(B3.CDB.WebApi.Services.CDBCalculator)">
+            <summary>
+            Inicializa uma nova instância de <see cref="T:B3.CDB.WebApi.Services.CDBService"/>.
+            </summary>
+            <param name="cdbCalculator">Calculadora de CDB responsável pelos cálculos matemáticos.</param>
+            <exception cref="T:System.ArgumentNullException">Lançada quando <paramref name="cdbCalculator"/> é nulo.</exception>
+        </member>
+        <member name="M:B3.CDB.WebApi.Services.CDBService.Calcular(System.Decimal,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:B3.CDB.WebApi.Services.ICDBService">
+            <summary>
+            Define o contrato do serviço de cálculo de investimentos em CDB.
+            </summary>
+        </member>
+        <member name="M:B3.CDB.WebApi.Services.ICDBService.Calcular(System.Decimal,System.Int32)">
+            <summary>
+            Calcula o investimento em CDB e retorna o resultado completo com valores bruto, líquido, imposto e alíquota.
+            </summary>
+            <param name="valorInicial">Valor inicial do investimento.</param>
+            <param name="meses">Número de meses do investimento.</param>
+            <returns>Resultado detalhado do investimento.</returns>
         </member>
     </members>
 </doc>

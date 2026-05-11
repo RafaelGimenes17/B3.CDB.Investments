@@ -1,419 +1,297 @@
-# B3.CDB.Investments - Sistema de C�lculo de Investimentos em CDB
+# B3.CDB.Investments - Sistema de Cálculo de Investimentos em CDB
 
-## ?? Sobre o Projeto
+## 📋 Sobre o Projeto
 
-O **B3.CDB.Investments** � uma API REST desenvolvida em **.NET 8** que realiza c�lculos de investimentos em Certificados de Dep�sito Banc�rio (CDB) da B3. A solu��o permite calcular o valor final bruto e l�quido de um investimento, considerando a aplica��o de uma taxa de CDI com percentual do banco e a cobran�a de Imposto de Renda progressivo conforme o tempo de resgate.
+O **B3.CDB.Investments** é uma solução full-stack composta por uma **API REST em .NET 8** e uma **SPA em Angular 17** que realiza cálculos de investimentos em Certificados de Depósito Bancário (CDB) da B3. A solução permite calcular o valor final bruto e líquido de um investimento, considerando a aplicação de uma taxa de CDI com percentual do banco e a cobrança de Imposto de Renda progressivo conforme o tempo de resgate.
 
-### Caracter�sticas Principais
+### **Autor**
+- ** Rafael Fernando Gimenes **
+- ** rafael.gimenes17@gmail.com **
 
-- ? C�lculo de CDB com composi��o mensal
-- ? Tabela progressiva de Imposto de Renda
-- ? Valida��es de entrada robustas
-- ? Resposta estruturada com resultados bruto e l�quido
-- ? Endpoint via POST (apenas)
-- ? Documenta��o via Swagger
+### Características Principais
 
-## ??? Arquitetura
+- ✅ Cálculo de CDB com composição mensal
+- ✅ Tabela progressiva de Imposto de Renda
+- ✅ Validações de entrada robustas
+- ✅ Resposta estruturada com resultados bruto e líquido
+- ✅ Endpoint via POST (apenas)
+- ✅ Documentação via Swagger
+- ✅ Interface web em Angular com formulário reativo
+- ✅ Testes unitários no frontend (Karma/Jasmine)
+
+---
+
+## 🏗️ Arquitetura
 
 ### Estrutura do Projeto
 
 ```
-B3.CDB.WebApi/
-??? Controllers/
-?   ??? CDBController.cs          # Endpoint principal de c�lculo de CDB
-??? Services/
-?   ??? CDBCalculator.cs          # L�gica de c�lculo do investimento
-??? Program.cs                     # Configura��o da aplica��o
-??? appsettings.json              # Configura��es
-??? B3.CDB.WebApi.csproj          # Arquivo do projeto
+B3.CDB.Investments/
+├── src/
+│   ├── backend/
+│   │   └── Aplicacoes/
+│   │       └── B3.CDB.WebApi/
+│   │           ├── Controllers/
+│   │           │   └── CDBController.cs       # Endpoint REST (apenas roteamento)
+│   │           ├── Services/
+│   │           │   ├── ICDBService.cs         # Interface de serviço (DIP)
+│   │           │   ├── CDBService.cs          # Orquestração e montagem do resultado
+│   │           │   └── CDBCalculator.cs       # Cálculos matemáticos do CDB
+│   │           ├── DTOs/
+│   │           │   ├── CalculoCDBRequest.cs
+│   │           │   ├── CDBResultadoResponse.cs
+│   │           │   └── ResultadoDetalhadoResponse.cs
+│   │           ├── Configurations/
+│   │           │   ├── ApiConfig.cs
+│   │           │   └── SwaggerConfig.cs
+│   │           └── Program.cs
+│   └── frontend/
+│       └── Investments/
+│           ├── src/app/
+│           │   ├── cdb-calculator/
+│           │   │   ├── cdb-calculator.component.ts
+│           │   │   ├── cdb-calculator.component.html
+│           │   │   ├── cdb-calculator.component.css
+│           │   │   └── cdb-calculator.component.spec.ts  # Testes unitários
+│           │   └── services/
+│           │       └── cdb.service.ts
+│           ├── karma.conf.js
+│           └── tsconfig.spec.json
+└── README.md
 ```
 
-### Componentes Principais
+---
 
-#### 1. **CDBCalculator.cs** (Servi�o de C�lculo)
-Respons�vel por toda a l�gica matem�tica do investimento:
-- C�lculo do valor final com composi��o mensal
-- C�lculo do rendimento bruto
-- Determina��o da al�quota de imposto
-- C�lculo do imposto sobre o rendimento
-- C�lculo do valor final l�quido
+## 🔧 Princípios SOLID Aplicados (Refatoração Recente)
+
+### SRP — Single Responsibility Principle
+
+O `CDBController` foi refatorado para ter **uma única responsabilidade**: receber a requisição HTTP, validar o `ModelState` e retornar a resposta. Toda a lógica de negócio (orquestração de cálculos, arredondamentos, montagem do DTO de resposta) foi extraída para o `CDBService`.
+
+**Antes (anti-pattern):**
+```csharp
+// CDBController fazia tudo: roteamento + cálculos + montagem de resposta
+decimal valorFinal = _cdbCalculator.CalcularValorFinal(...);
+decimal rendimento = _cdbCalculator.CalcularRendimento(...);
+decimal imposto    = _cdbCalculator.CalcularImposto(...);
+// ... mais 3 chamadas e Math.Round espalhados no controller
+```
+
+**Depois (SRP aplicado):**
+```csharp
+// CDBController: apenas roteia e delega
+var resultado = _cdbService.Calcular(request.ValorInicial, request.Meses);
+return Ok(resultado);
+```
+
+### DIP — Dependency Inversion Principle
+
+O controller agora depende da **abstração** `ICDBService`, não da implementação concreta. Isso permite trocar a implementação sem alterar o controller (ex: para testes, mocks, ou futuras implementações alternativas).
+
+```csharp
+// Interface (abstração)
+public interface ICDBService
+{
+    CDBResultadoResponse Calcular(decimal valorInicial, int meses);
+}
+
+// Controller depende da interface, não da classe concreta
+public CDBController(ICDBService cdbService) { ... }
+```
+
+### Injeção de Dependência (DI Container)
+
+O binding entre interface e implementação é registrado no `Program.cs`:
+
+```csharp
+builder.Services.AddScoped<CDBCalculator>();
+builder.Services.AddScoped<ICDBService, CDBService>();
+```
+
+---
+
+## 🧮 Componentes do Backend
+
+### 1. **ICDBService** (Interface)
+Define o contrato do serviço de cálculo. Permite inversão de dependência e facilita testes com mocks.
+
+### 2. **CDBService** (Implementação)
+Responsável por:
+- Orquestrar as chamadas ao `CDBCalculator`
+- Aplicar arredondamentos financeiros (2 casas decimais)
+- Converter alíquota para percentual
+- Calcular o rendimento líquido (`rendimento - imposto`)
+- Montar e retornar o `CDBResultadoResponse`
+
+### 3. **CDBCalculator** (Cálculos Matemáticos)
+Responsável pela matemática pura do investimento:
+- Cálculo do valor final com composição mensal
+- Cálculo do rendimento bruto
+- Determinação da alíquota de imposto (tabela progressiva)
+- Cálculo do imposto sobre o rendimento
+- Cálculo do valor final líquido
 
 **Constantes Configuradas:**
 - **TB (Taxa do Banco):** 108%
-- **CDI (Certificado de Dep�sito Interbanc�rio):** 0,9% ao m�s
+- **CDI (Certificado de Depósito Interbancário):** 0,9% ao mês
 
-#### 2. **CDBController.cs** (Controlador de API)
-Exp�e um endpoint REST POST para c�lculo de investimentos:
+### 4. **CDBController** (Controlador de API)
+Responsabilidade única: receber a requisição HTTP, validar o `ModelState` e retornar a resposta HTTP adequada. Não contém lógica de negócio.
 
-**Modelos de Dados:**
-- `CDBRequest` - Entrada de dados
-- `ParametrosCDB` - Par�metros do investimento
-- `ResultadoBruto` - Resultado sem impostos
-- `ResultadoLiquido` - Resultado com impostos
-- `CDBResultadoResponse` - Resposta completa
+---
 
-### F�rmulas Utilizadas
+## 🧮 Fórmulas Utilizadas
 
-#### 1. C�lculo do Valor Final
+### 1. Cálculo do Valor Final
 ```
-VF = VI � [1 + (CDI � TB)]^n
+VF = VI × [1 + (CDI × TB)]^n
 
 Onde:
 - VF = Valor Final
 - VI = Valor Inicial
 - CDI = Taxa CDI (0,9%)
 - TB = Taxa do Banco (108%)
-- n = N�mero de meses (aplicado iterativamente)
+- n = Número de meses (aplicado iterativamente)
 ```
 
-**Nota:** O c�lculo � realizado m�s a m�s, onde os rendimentos de cada m�s s�o utilizados como base para o c�lculo do pr�ximo m�s (composi��o mensal).
+> O cálculo é realizado mês a mês, onde os rendimentos de cada mês são utilizados como base para o cálculo do próximo mês (composição mensal).
 
-#### 2. C�lculo do Rendimento Bruto
+### 2. Cálculo do Rendimento Bruto
 ```
 Rendimento Bruto = Valor Final - Valor Inicial
 ```
 
-#### 3. Tabela de Imposto de Renda (IR)
+### 3. Tabela de Imposto de Renda (IR)
 ```
-At� 6 meses:      22,5%
-At� 12 meses:     20%
-At� 24 meses:     17,5%
+Até 6 meses:       22,5%
+Até 12 meses:      20%
+Até 24 meses:      17,5%
 Acima de 24 meses: 15%
 ```
 
-#### 4. C�lculo do Imposto
+### 4. Cálculo do Imposto
 ```
-Imposto = Rendimento Bruto � Al�quota IR
-```
-
-#### 5. C�lculo do Valor L�quido
-```
-Valor L�quido = Valor Final - Imposto
-Rendimento L�quido = Valor L�quido - Valor Inicial
+Imposto = Rendimento Bruto × Alíquota IR
 ```
 
-## ?? Requisitos do Sistema
+### 5. Cálculo do Valor Líquido
+```
+Valor Líquido    = Valor Final - Imposto
+Rendimento Líquido = Rendimento Bruto - Imposto
+```
 
+---
+
+## 🖥️ Requisitos do Sistema
+
+### Backend
 - **.NET 8.0** ou superior
 - **Visual Studio 2022** (recomendado) ou VS Code
-- **PowerShell** ou Command Prompt
 
-## ?? Como Executar
+### Frontend
+- **Node.js 18+** e **npm**
+- **Angular CLI 17**
+- **Google Chrome** (para execução dos testes com Karma)
 
-### 1. Clonar ou Abrir o Projeto
+---
+
+## 🚀 Como Executar
+
+### Backend (.NET)
 
 ```bash
-# Se estiver no diret�rio do projeto
-cd C:\Users\Aline\OneDrive\Desktop\Dev\B3.CDB.Investments
-```
+# 1. Navegar até o projeto da API
+cd src/backend/Aplicacoes/B3.CDB.WebApi
 
-### 2. Restaurar Depend�ncias
-
-```bash
+# 2. Restaurar dependências
 dotnet restore
-```
 
-### 3. Compilar o Projeto
-
-```bash
+# 3. Compilar
 dotnet build
-```
 
-### 4. Executar a Aplica��o
-
-```bash
+# 4. Executar
 dotnet run
 ```
 
-Ou use Visual Studio:
-- Abra o projeto em Visual Studio
-- Pressione `F5` ou clique em "Executar"
-
-A API estar� dispon�vel em:
+A API estará disponível em:
 - **HTTP:** `http://localhost:5000`
-- **HTTPS:** `https://localhost:5001`
+- **HTTPS:** `https://localhost:7257`
+- **Swagger:** `https://localhost:7257/swagger`
 
-### 5. Acessar a Documenta��o Swagger
-
-Abra o navegador e acesse:
-```
-https://localhost:5001/swagger
-```
-
-## ?? Como Testar
-
-### Usando Swagger (Interface Gr�fica)
-
-1. Acesse `https://localhost:5001/swagger`
-2. Localize o endpoint `POST /api/cdb/calcular`
-3. Clique em "Try it out"
-4. Preencha os par�metros no corpo JSON e clique em "Execute"
-
-### Usando cURL
+### Frontend (Angular)
 
 ```bash
-curl -X POST "https://localhost:5001/api/cdb/calcular" \
-  -H "Content-Type: application/json" \
-  -d "{\"valorInicial\":1000,\"meses\":6}"
+# 1. Navegar até o projeto frontend
+cd src/frontend/Investments
+
+# 2. Instalar dependências
+npm install
+
+# 3. Iniciar o servidor de desenvolvimento (com proxy para a API)
+npm start
 ```
 
-### Usando Postman
+A aplicação estará disponível em `http://localhost:4200`.
 
-- **URL:** `https://localhost:5001/api/cdb/calcular`
-- **M�todo:** POST
-- **Headers:** `Content-Type: application/json`
-- **Body (JSON):**
-```json
-{
-  "valorInicial": 1000,
-  "meses": 6
-}
+> O proxy está configurado em `proxy.conf.json` para redirecionar `/api/*` para `http://localhost:7257`.
+
+---
+
+## 🧪 Testes
+
+### Testes do Frontend (Angular — Karma/Jasmine)
+
+O projeto possui **20 testes unitários** para o `CDBCalculatorComponent`, cobrindo:
+
+| Grupo | O que é testado |
+|---|---|
+| Criação | Componente criado, estado inicial correto |
+| Validação do formulário | Campos vazios, `valorInicial=0`, `meses=1`, dados válidos |
+| Chamada ao serviço | Payload correto enviado ao `CDBService`, roteamento para `calcularInvestimento2` |
+| Exibição no DOM | Valor bruto, valor líquido, imposto e alíquota renderizados |
+| Tratamento de erro | Mensagem de erro no estado e no DOM quando a API falha |
+| Limpar | Formulário, resultado e erro resetados |
+| Formatadores | `formatarMoeda` e `formatarPercentual` com todas as alíquotas |
+
+**Como rodar os testes do frontend:**
+
+```bash
+cd src/frontend/Investments
+
+# Rodar uma vez (modo CI)
+npm test -- --watch=false --browsers=ChromeHeadless
+
+# Rodar em modo watch (desenvolvimento)
+npm test
 ```
 
-### Usando PowerShell
-
-```powershell
-$body = @{
-    valorInicial = 1000
-    meses = 6
-} | ConvertTo-Json
-
-$uri = "https://localhost:5001/api/cdb/calcular"
-Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Body $body
+**Resultado esperado:**
+```
+TOTAL: 20 SUCCESS
 ```
 
-## ?? Exemplos de Respostas
+> Os testes utilizam **mocks do `CDBService`** via `jasmine.createSpy`, garantindo que nenhuma chamada HTTP real é feita durante os testes.
 
-### Exemplo 1: Investimento de 6 Meses
+---
 
-**Requisi��o:**
-```json
-{
-  "valorInicial": 1000,
-  "meses": 6
-}
+### Testes do Backend (.NET)
+
+> Se houver projetos de teste .NET na solução, execute:
+
+```bash
+# Na raiz da solução
+dotnet test
+
+# Com relatório detalhado
+dotnet test --verbosity normal
+
+# Com cobertura de código
+dotnet test --collect:"XPlat Code Coverage"
 ```
 
-**Resposta (200 OK):**
-```json
-{
-  "parametros": {
-    "valorInicial": 1000.00,
-    "meses": 6,
-    "taxaCDI": "0,9%",
-    "taxaBanco": "108%"
-  },
-  "resultadoBruto": {
-    "valorFinal": 1054.81,
-    "rendimento": 54.81
-  },
-  "resultadoLiquido": {
-    "aliquotaImposto": "22.5%",
-    "imposto": 12.33,
-    "valorFinal": 1042.48,
-    "rendimento": 42.48
-  }
-}
-```
+---
 
-### Exemplo 2: Investimento de 12 Meses
-
-**Requisi��o:**
-```json
-{
-  "valorInicial": 5000,
-  "meses": 12
-}
-```
-
-**Resposta (200 OK):**
-```json
-{
-  "parametros": {
-    "valorInicial": 5000.00,
-    "meses": 12,
-    "taxaCDI": "0,9%",
-    "taxaBanco": "108%"
-  },
-  "resultadoBruto": {
-    "valorFinal": 5565.49,
-    "rendimento": 565.49
-  },
-  "resultadoLiquido": {
-    "aliquotaImposto": "20%",
-    "imposto": 113.10,
-    "valorFinal": 5452.39,
-    "rendimento": 452.39
-  }
-}
-```
-
-### Exemplo 3: Investimento de 24 Meses
-
-**Requisi��o:**
-```json
-{
-  "valorInicial": 10000,
-  "meses": 24
-}
-```
-
-**Resposta (200 OK):**
-```json
-{
-  "parametros": {
-    "valorInicial": 10000.00,
-    "meses": 24,
-    "taxaCDI": "0,9%",
-    "taxaBanco": "108%"
-  },
-  "resultadoBruto": {
-    "valorFinal": 11639.08,
-    "rendimento": 1639.08
-  },
-  "resultadoLiquido": {
-    "aliquotaImposto": "17.5%",
-    "imposto": 286.84,
-    "valorFinal": 11352.24,
-    "rendimento": 1352.24
-  }
-}
-```
-
-## ? Casos de Erro
-
-### Erro 1: Valor Inicial Inv�lido
-
-**Requisi��o:**
-```json
-{
-  "valorInicial": 0,
-  "meses": 6
-}
-```
-
-**Resposta (400 Bad Request):**
-```json
-{
-  "erro": "Valor inicial deve ser positivo"
-}
-```
-
-### Erro 2: Prazo Menor que 2 Meses
-
-**Requisi��o:**
-```json
-{
-  "valorInicial": 1000,
-  "meses": 1
-}
-```
-
-**Resposta (400 Bad Request):**
-```json
-{
-  "erro": "Prazo deve ser maior que 1 m�s"
-}
-```
-
-### Erro 3: Valor Negativo
-
-**Requisi��o:**
-```json
-{
-  "valorInicial": -1000,
-  "meses": 6
-}
-```
-
-**Resposta (400 Bad Request):**
-```json
-{
-  "erro": "Valor inicial deve ser positivo"
-}
-```
-
-## ?? Testes Recomendados
-
-### Teste 1: Valida��o de Valor Positivo
-```
-Entradas: valorInicial = -500, meses = 12
-Esperado: Erro "Valor inicial deve ser positivo"
-```
-
-### Teste 2: Valida��o de Prazo M�nimo
-```
-Entradas: valorInicial = 1000, meses = 1
-Esperado: Erro "Prazo deve ser maior que 1 m�s"
-```
-
-### Teste 3: C�lculo Correto - 6 Meses
-```
-Entradas: valorInicial = 1000, meses = 6
-Verificar: Al�quota IR = 22,5%
-Verificar: Rendimento bruto ? 54,81
-```
-
-### Teste 4: C�lculo Correto - 12 Meses
-```
-Entradas: valorInicial = 1000, meses = 12
-Verificar: Al�quota IR = 20%
-Verificar: Rendimento bruto ? 113,63
-```
-
-### Teste 5: C�lculo Correto - 24 Meses
-```
-Entradas: valorInicial = 1000, meses = 24
-Verificar: Al�quota IR = 17,5%
-Verificar: Rendimento bruto ? 263,85
-```
-
-### Teste 6: C�lculo Correto - Acima de 24 Meses
-```
-Entradas: valorInicial = 1000, meses = 25
-Verificar: Al�quota IR = 15%
-Verificar: Rendimento bruto ? 271,20
-```
-
-## ?? Detalhes T�cnicos
-
-### Stack Tecnol�gico
-- **Framework:** ASP.NET Core 8.0
-- **Linguagem:** C# 12
-- **Documenta��o API:** Swagger/OpenAPI
-- **Formato de Dados:** JSON
-
-### Valida��es Implementadas
-- ? Valor inicial deve ser positivo (> 0)
-- ? Prazo em meses deve ser maior que 1 (> 1)
-- ? Tratamento de exce��es com mensagens claras
-
-### Precis�o Num�rica
-- Todas as opera��es utilizam `decimal` para precis�o financeira
-- Resultados s�o arredondados a 2 casas decimais
-
-## ?? Estrutura de Pastas
-
-```
-C:\Users\Aline\OneDrive\Desktop\Dev\B3.CDB.Investments\
-??? src\
-?   ??? backend\
-?       ??? Aplicacoes\
-?           ??? B3.CDB.WebApi\
-?               ??? Controllers\
-?               ?   ??? CDBController.cs
-?               ??? Services\
-?               ?   ??? CDBCalculator.cs
-?               ??? Program.cs
-?               ??? appsettings.json
-?               ??? appsettings.Development.json
-?               ??? B3.CDB.WebApi.csproj
-?               ??? ...outros arquivos
-??? README.md                      # Este arquivo
-??? ...outros arquivos
-```
-
-## ?? Documenta��o de Endpoints
+## 📡 Documentação de Endpoints
 
 ### Endpoint: Calcular CDB (POST)
 
@@ -424,73 +302,170 @@ Content-Type: application/json
 
 **Body (JSON):**
 
-| Campo | Tipo | Descri��o | Exemplo |
-|-------|------|-----------|---------|
-| valorInicial | decimal | Valor inicial do investimento (deve ser positivo) | 1000 |
-| meses | int | Prazo em meses (deve ser > 1) | 6 |
+| Campo | Tipo | Descrição | Validação |
+|-------|------|-----------|-----------|
+| `valorInicial` | decimal | Valor inicial do investimento | Obrigatório, > 0 |
+| `meses` | int | Prazo em meses | Obrigatório, >= 2 |
 
-**Respostas:**
-- `200 OK` - C�lculo realizado com sucesso
-- `400 Bad Request` - Valida��o falhou ou dados inv�lidos
-
-**Exemplo de Resposta (200 OK):**
+**Resposta (200 OK):**
 ```json
 {
-  "parametros": {
-    "valorInicial": 1000.00,
-    "meses": 6,
-    "taxaCDI": "0,9%",
-    "taxaBanco": "108%"
-  },
+  "valorInicial": 1000.00,
+  "meses": 12,
+  "aliquota": 20.00,
   "resultadoBruto": {
-    "valorFinal": 1054.81,
-    "rendimento": 54.81
+    "valor": 1113.63,
+    "rendimento": 113.63
   },
   "resultadoLiquido": {
-    "aliquotaImposto": "22.5%",
-    "imposto": 12.33,
-    "valorFinal": 1042.48,
-    "rendimento": 42.48
-  }
+    "valor": 1090.90,
+    "rendimento": 90.90
+  },
+  "imposto": 22.73
+}
+```
+
+**Respostas de erro:**
+- `400 Bad Request` — Validação falhou ou dados inválidos
+
+---
+
+## 📊 Exemplos de Respostas
+
+### Exemplo 1: Investimento de 6 Meses (Alíquota 22,5%)
+
+**Requisição:**
+```json
+{ "valorInicial": 1000, "meses": 6 }
+```
+
+**Resposta (200 OK):**
+```json
+{
+  "valorInicial": 1000.00,
+  "meses": 6,
+  "aliquota": 22.50,
+  "resultadoBruto": { "valor": 1054.81, "rendimento": 54.81 },
+  "resultadoLiquido": { "valor": 1042.48, "rendimento": 42.48 },
+  "imposto": 12.33
+}
+```
+
+### Exemplo 2: Investimento de 12 Meses (Alíquota 20%)
+
+**Requisição:**
+```json
+{ "valorInicial": 5000, "meses": 12 }
+```
+
+**Resposta (200 OK):**
+```json
+{
+  "valorInicial": 5000.00,
+  "meses": 12,
+  "aliquota": 20.00,
+  "resultadoBruto": { "valor": 5568.17, "rendimento": 568.17 },
+  "resultadoLiquido": { "valor": 5454.51, "rendimento": 454.51 },
+  "imposto": 113.63
+}
+```
+
+### Exemplo 3: Investimento de 24 Meses (Alíquota 17,5%)
+
+**Requisição:**
+```json
+{ "valorInicial": 10000, "meses": 24 }
+```
+
+**Resposta (200 OK):**
+```json
+{
+  "valorInicial": 10000.00,
+  "meses": 24,
+  "aliquota": 17.50,
+  "resultadoBruto": { "valor": 11639.08, "rendimento": 1639.08 },
+  "resultadoLiquido": { "valor": 11352.24, "rendimento": 1352.24 },
+  "imposto": 286.84
 }
 ```
 
 ---
 
-## ?? Resolu��o de Problemas
+## ❌ Casos de Erro
 
-### Problema: Porta j� em uso
+### Valor Inicial Inválido
+```json
+// Requisição
+{ "valorInicial": 0, "meses": 6 }
 
-Se a porta 5001 ou 5000 estiver em uso:
+// Resposta 400
+{ "mensagem": "O valor inicial deve ser maior que zero." }
+```
+
+### Prazo Menor que 2 Meses
+```json
+// Requisição
+{ "valorInicial": 1000, "meses": 1 }
+
+// Resposta 400
+{ "mensagem": "O prazo deve ser maior que 1 mês." }
+```
+
+---
+
+## 🔍 Resolução de Problemas
+
+### Porta já em uso (backend)
 
 ```powershell
 # Encontre o processo usando a porta
-Get-NetTCPConnection -LocalPort 5001
+Get-NetTCPConnection -LocalPort 7257
 
-# Ou mude a porta no appsettings.json
+# Ou mude a porta no appsettings.json / launchSettings.json
 ```
 
-### Problema: Certificado HTTPS n�o confi�vel
+### Certificado HTTPS não confiável
 
-Se receber erro de certificado SSL:
 ```bash
 dotnet dev-certs https --trust
 ```
 
-### Problema: Acesso Negado
+### Chrome não encontrado para os testes do frontend
 
-Se receber erro de permiss�o, execute o terminal como administrador.
-
-## ?? Suporte e Contribui��es
-
-Para reportar problemas ou sugerir melhorias, entre em contato com a equipe de desenvolvimento.
-
-## ?? Licen�a
-
-Projeto desenvolvido para fins educacionais e de demonstra��o.
+Certifique-se de que o Google Chrome está instalado. Os testes usam `ChromeHeadless` configurado no `karma.conf.js`.
 
 ---
 
-**Vers�o:** 1.0  
-**�ltima Atualiza��o:** 2024  
-**Desenvolvido em:** .NET 8
+## 🛠️ Detalhes Técnicos
+
+### Stack Tecnológico
+
+| Camada | Tecnologia |
+|--------|-----------|
+| Backend | ASP.NET Core 8.0 / C# 12 |
+| Frontend | Angular 17 (Standalone Components) |
+| Testes Frontend | Karma 6 + Jasmine |
+| Documentação API | Swagger / OpenAPI |
+| Formato de Dados | JSON |
+
+### Validações Implementadas
+- ✅ Valor inicial deve ser positivo (> 0)
+- ✅ Prazo em meses deve ser maior que 1 (>= 2)
+- ✅ Tratamento de exceções com mensagens claras
+- ✅ Validação via `DataAnnotations` no DTO de request
+
+### Precisão Numérica
+- Todas as operações utilizam `decimal` para precisão financeira
+- Resultados são arredondados a 2 casas decimais no `CDBService`
+
+---
+
+## 📄 Licença
+
+Projeto desenvolvido para fins educacionais e de demonstração.
+
+---
+
+**Versão:** 2.0
+**Última Atualização:** Maio/2026
+**Desenvolvido em:** .NET 8 + Angular 17

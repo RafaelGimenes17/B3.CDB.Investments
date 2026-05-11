@@ -1,0 +1,174 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CDB Web API",
+    "description": "API para cálculo de investimentos em CDB",
+    "contact": {
+      "name": "CDB Web API"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/CDB/calcular": {
+      "post": {
+        "tags": [
+          "CDB"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculoCDBRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculoCDBRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculoCDBRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CDBResultadoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CDBResultadoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CDBResultadoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CDBResultadoResponse": {
+        "type": "object",
+        "properties": {
+          "valorInicial": {
+            "type": "number",
+            "format": "double"
+          },
+          "meses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aliquota": {
+            "type": "number",
+            "format": "double"
+          },
+          "resultadoBruto": {
+            "$ref": "#/components/schemas/ResultadoDetalhadoResponse"
+          },
+          "resultadoLiquido": {
+            "$ref": "#/components/schemas/ResultadoDetalhadoResponse"
+          },
+          "imposto": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CalculoCDBRequest": {
+        "required": [
+          "valorInicial"
+        ],
+        "type": "object",
+        "properties": {
+          "valorInicial": {
+            "minimum": 0,01,
+            "type": "number",
+            "format": "double"
+          },
+          "meses": {
+            "maximum": 2147483647,
+            "minimum": 2,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "ResultadoDetalhadoResponse": {
+        "type": "object",
+        "properties": {
+          "valor": {
+            "type": "number",
+            "format": "double"
+          },
+          "rendimento": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

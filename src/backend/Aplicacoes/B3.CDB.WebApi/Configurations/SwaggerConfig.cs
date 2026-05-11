@@ -2,8 +2,16 @@
 
 namespace B3.CDB.WebApi.Configurations
 {
+    /// <summary>
+    /// Configurações do Swagger/OpenAPI para documentação da API.
+    /// </summary>
     public static class SwaggerConfig
     {
+        /// <summary>
+        /// Adiciona as configurações do Swagger ao contêiner de serviços.
+        /// </summary>
+        /// <param name="services">Coleção de serviços da aplicação.</param>
+        /// <returns>A coleção de serviços atualizada.</returns>
         public static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
@@ -16,31 +24,6 @@ namespace B3.CDB.WebApi.Configurations
                     Contact = new OpenApiContact
                     {
                         Name = "CDB Web API"
-                    }
-                });
-
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Insira o token JWT no formato: Bearer {seu token}"
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        []
                     }
                 });
             });

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FcLCNcG+1Jw=",
+  "dgSpecHash": "iM1QAn/omXs=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Aline\\OneDrive\\Desktop\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj",
+  "projectFilePath": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Aline\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\Aline\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",

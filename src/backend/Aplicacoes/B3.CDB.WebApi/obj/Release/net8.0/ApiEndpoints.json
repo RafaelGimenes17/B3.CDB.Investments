@@ -1,0 +1,37 @@
+[
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "Calcular",
+    "RelativePath": "api/CDB/calcular",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "B3.CDB.WebApi.DTOs.CalculoCDBRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "B3.CDB.WebApi.DTOs.CDBResultadoResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      }
+    ]
+  }
+]

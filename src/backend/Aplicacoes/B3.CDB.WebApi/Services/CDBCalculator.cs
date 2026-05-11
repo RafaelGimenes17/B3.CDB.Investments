@@ -1,32 +1,45 @@
 namespace B3.CDB.WebApi.Services
 {
+    /// <summary>
+    /// ResponsÃ¡vel pelos cÃ¡lculos matemÃ¡ticos de investimentos em CDB,
+    /// incluindo valor final, rendimento, alÃ­quota de IR e valor lÃ­quido.
+    /// </summary>
     public class CDBCalculator
     {
-        private const decimal TB = 1.08m;  // 108%
-        private const decimal CDI = 0.009m; // 0,9%
+        private const decimal TaxaBanco = 1.08m;  // 108%
+        private const decimal TaxaCdi = 0.009m;   // 0,9%
 
         /// <summary>
-        /// Calcula o valor final de um investimento em CDB com base no valor inicial e número de meses.
-        /// Utiliza a fórmula: VF = VI × [1 + (CDI × TB)]
-        /// O cálculo é realizado mês a mês, onde os rendimentos de cada mês são utilizados para calcular o mês seguinte.
+        /// Fator de crescimento mensal prÃ©-calculado: 1 + (CDI Ã— TB).
+        /// Calculado uma Ãºnica vez como campo estÃ¡tico para evitar recÃ¡lculo a cada chamada.
         /// </summary>
-        /// <param name="valorInicial">Valor inicial do investimento</param>
-        /// <param name="meses">Número de meses para aplicar o cálculo</param>
-        /// <returns>Valor final do investimento após os meses especificados</returns>
+        private static readonly decimal FatorMensal = 1 + (TaxaCdi * TaxaBanco);
+
+        /// <summary>
+        /// Calcula o valor final de um investimento em CDB com base no valor inicial e nÃºmero de meses.
+        /// Utiliza a fÃ³rmula: VF = VI Ã— [1 + (CDI Ã— TB)]^n
+        /// O cÃ¡lculo Ã© realizado mÃªs a mÃªs, onde os rendimentos de cada mÃªs sÃ£o utilizados para calcular o mÃªs seguinte.
+        /// </summary>
+        /// <param name="valorInicial">Valor inicial do investimento.</param>
+        /// <param name="meses">NÃºmero de meses para aplicar o cÃ¡lculo.</param>
+        /// <returns>Valor final do investimento apÃ³s os meses especificados.</returns>
+        /// <exception cref="ArgumentException">
+        /// LanÃ§ada quando <paramref name="valorInicial"/> Ã© menor ou igual a zero,
+        /// ou quando <paramref name="meses"/> Ã© menor ou igual a 1.
+        /// </exception>
         public decimal CalcularValorFinal(decimal valorInicial, int meses)
         {
             if (valorInicial <= 0)
                 throw new ArgumentException("Valor inicial deve ser positivo", nameof(valorInicial));
 
             if (meses <= 1)
-                throw new ArgumentException("Prazo deve ser maior que 1 mês", nameof(meses));
+                throw new ArgumentException("Prazo deve ser maior que 1 mÃªs", nameof(meses));
 
-            decimal fatorMensal = 1 + (CDI * TB);
             decimal resultado = valorInicial;
 
             for (int i = 0; i < meses; i++)
             {
-                resultado *= fatorMensal;
+                resultado *= FatorMensal;
             }
 
             return resultado;
@@ -35,9 +48,9 @@ namespace B3.CDB.WebApi.Services
         /// <summary>
         /// Calcula o rendimento total obtido no investimento em CDB.
         /// </summary>
-        /// <param name="valorInicial">Valor inicial do investimento</param>
-        /// <param name="meses">Número de meses para aplicar o cálculo</param>
-        /// <returns>Rendimento total (Valor Final - Valor Inicial)</returns>
+        /// <param name="valorInicial">Valor inicial do investimento.</param>
+        /// <param name="meses">NÃºmero de meses para aplicar o cÃ¡lculo.</param>
+        /// <returns>Rendimento total (Valor Final - Valor Inicial).</returns>
         public decimal CalcularRendimento(decimal valorInicial, int meses)
         {
             decimal valorFinal = CalcularValorFinal(valorInicial, meses);
@@ -45,16 +58,18 @@ namespace B3.CDB.WebApi.Services
         }
 
         /// <summary>
-        /// Obtém a alíquota de imposto (IR) baseada no número de meses.
+        /// ObtÃ©m a alÃ­quota de Imposto de Renda (IR) baseada no nÃºmero de meses.
         /// Tabela progressiva:
-        /// - Até 6 meses: 22,5%
-        /// - Até 12 meses: 20%
-        /// - Até 24 meses: 17,5%
-        /// - Acima de 24 meses: 15%
+        /// <list type="bullet">
+        ///   <item><description>AtÃ© 6 meses: 22,5%</description></item>
+        ///   <item><description>AtÃ© 12 meses: 20%</description></item>
+        ///   <item><description>AtÃ© 24 meses: 17,5%</description></item>
+        ///   <item><description>Acima de 24 meses: 15%</description></item>
+        /// </list>
         /// </summary>
-        /// <param name="meses">Número de meses do investimento</param>
-        /// <returns>Alíquota de imposto em decimal (ex: 0.225 para 22,5%)</returns>
-        public decimal ObtenerAliquotaImposto(int meses)
+        /// <param name="meses">NÃºmero de meses do investimento.</param>
+        /// <returns>AlÃ­quota de imposto em decimal (ex: 0.225 para 22,5%).</returns>
+        public decimal ObterAliquotaImposto(int meses)
         {
             return meses switch
             {
@@ -66,24 +81,24 @@ namespace B3.CDB.WebApi.Services
         }
 
         /// <summary>
-        /// Calcula o valor do imposto (IR) sobre o rendimento do CDB.
+        /// Calcula o valor do Imposto de Renda (IR) sobre o rendimento do CDB.
         /// </summary>
-        /// <param name="valorInicial">Valor inicial do investimento</param>
-        /// <param name="meses">Número de meses para aplicar o cálculo</param>
-        /// <returns>Valor do imposto em reais</returns>
+        /// <param name="valorInicial">Valor inicial do investimento.</param>
+        /// <param name="meses">NÃºmero de meses para aplicar o cÃ¡lculo.</param>
+        /// <returns>Valor do imposto em reais.</returns>
         public decimal CalcularImposto(decimal valorInicial, int meses)
         {
             decimal rendimento = CalcularRendimento(valorInicial, meses);
-            decimal aliquota = ObtenerAliquotaImposto(meses);
+            decimal aliquota = ObterAliquotaImposto(meses);
             return rendimento * aliquota;
         }
 
         /// <summary>
-        /// Calcula o valor líquido final (após dedução do imposto) do investimento em CDB.
+        /// Calcula o valor lÃ­quido final (apÃ³s deduÃ§Ã£o do imposto) do investimento em CDB.
         /// </summary>
-        /// <param name="valorInicial">Valor inicial do investimento</param>
-        /// <param name="meses">Número de meses para aplicar o cálculo</param>
-        /// <returns>Valor final líquido (Valor Final - Imposto)</returns>
+        /// <param name="valorInicial">Valor inicial do investimento.</param>
+        /// <param name="meses">NÃºmero de meses para aplicar o cÃ¡lculo.</param>
+        /// <returns>Valor final lÃ­quido (Valor Final - Imposto).</returns>
         public decimal CalcularValorLiquido(decimal valorInicial, int meses)
         {
             decimal valorFinal = CalcularValorFinal(valorInicial, meses);

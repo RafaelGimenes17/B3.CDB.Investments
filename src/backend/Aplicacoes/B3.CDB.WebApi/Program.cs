@@ -9,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig();
 builder.Services.AddApiConfig(builder.Configuration);
 builder.Services.AddScoped<CDBCalculator>();
+builder.Services.AddScoped<ICDBService, CDBService>();
 
 var app = builder.Build();
 

@@ -718,11 +718,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Aline\\OneDrive\\Desktop\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj",
+      "projectUniqueName": "c:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj",
       "projectName": "B3.CDB.WebApi",
-      "projectPath": "C:\\Users\\Aline\\OneDrive\\Desktop\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj",
+      "projectPath": "c:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj",
       "packagesPath": "C:\\Users\\Aline\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Aline\\OneDrive\\Desktop\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\obj\\",
+      "outputPath": "c:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
