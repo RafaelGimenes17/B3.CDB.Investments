@@ -1,7 +1,28 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Dev\\B3.CDB.Investments\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|c:\\dev\\b3.cdb.investments\\src\\backend\\aplicacoes\\b3.cdb.webapi\\dtos\\resultadodetalhadoresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|solutionrelative:src\\backend\\aplicacoes\\b3.cdb.webapi\\dtos\\resultadodetalhadoresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|c:\\dev\\b3.cdb.investments\\src\\backend\\aplicacoes\\b3.cdb.webapi\\dtos\\cdbresultadoresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|solutionrelative:src\\backend\\aplicacoes\\b3.cdb.webapi\\dtos\\cdbresultadoresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|c:\\dev\\b3.cdb.investments\\src\\backend\\aplicacoes\\b3.cdb.webapi\\dtos\\calculocdbrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|solutionrelative:src\\backend\\aplicacoes\\b3.cdb.webapi\\dtos\\calculocdbrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|c:\\dev\\b3.cdb.investments\\src\\backend\\aplicacoes\\b3.cdb.webapi\\controllers\\cdbcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|solutionrelative:src\\backend\\aplicacoes\\b3.cdb.webapi\\controllers\\cdbcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|c:\\dev\\b3.cdb.investments\\src\\backend\\aplicacoes\\b3.cdb.webapi\\configurations\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2A3DE595-A8FF-4AD9-9E6C-CA640AD5B513}|src\\backend\\Aplicacoes\\B3.CDB.WebApi\\B3.CDB.WebApi.csproj|solutionrelative:src\\backend\\aplicacoes\\b3.cdb.webapi\\configurations\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +30,76 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ResultadoDetalhadoResponse.cs",
+              "DocumentMoniker": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\ResultadoDetalhadoResponse.cs",
+              "RelativeDocumentMoniker": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\ResultadoDetalhadoResponse.cs",
+              "ToolTip": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\ResultadoDetalhadoResponse.cs",
+              "RelativeToolTip": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\ResultadoDetalhadoResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T19:00:09.927Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CDBResultadoResponse.cs",
+              "DocumentMoniker": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CDBResultadoResponse.cs",
+              "RelativeDocumentMoniker": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CDBResultadoResponse.cs",
+              "ToolTip": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CDBResultadoResponse.cs",
+              "RelativeToolTip": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CDBResultadoResponse.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T19:00:04.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CalculoCDBRequest.cs",
+              "DocumentMoniker": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CalculoCDBRequest.cs",
+              "RelativeDocumentMoniker": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CalculoCDBRequest.cs",
+              "ToolTip": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CalculoCDBRequest.cs",
+              "RelativeToolTip": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\DTOs\\CalculoCDBRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T18:59:56.175Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CDBController.cs",
+              "DocumentMoniker": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Controllers\\CDBController.cs",
+              "RelativeDocumentMoniker": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Controllers\\CDBController.cs",
+              "ToolTip": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Controllers\\CDBController.cs",
+              "RelativeToolTip": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Controllers\\CDBController.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAwCoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T18:58:43.161Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApiConfig.cs",
+              "DocumentMoniker": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Configurations\\ApiConfig.cs",
+              "RelativeDocumentMoniker": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Configurations\\ApiConfig.cs",
+              "ToolTip": "C:\\Dev\\B3.CDB.Investments\\src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Configurations\\ApiConfig.cs",
+              "RelativeToolTip": "src\\backend\\Aplicacoes\\B3.CDB.WebApi\\Configurations\\ApiConfig.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T18:57:47.045Z",
+              "EditorCaption": ""
             }
           ]
         }
