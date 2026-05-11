@@ -1,0 +1,158 @@
+[
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "ObtenerAliquotaImposto",
+    "RelativePath": "api/CDB/aliquota-imposto/{meses}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "meses",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Decimal",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "Calcular",
+    "RelativePath": "api/CDB/calcular",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "B3.CDB.WebApi.Controllers.CalculoCDBRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "B3.CDB.WebApi.Controllers.CDBResultadoResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "CalcularImposto",
+    "RelativePath": "api/CDB/calcular-imposto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "B3.CDB.WebApi.Controllers.CalculoCDBRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Decimal",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "CalcularRendimento",
+    "RelativePath": "api/CDB/calcular-rendimento",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "B3.CDB.WebApi.Controllers.CalculoCDBRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Decimal",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "CalcularValorFinal",
+    "RelativePath": "api/CDB/calcular-valor-final",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "B3.CDB.WebApi.Controllers.CalculoCDBRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Decimal",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "B3.CDB.WebApi.Controllers.CDBController",
+    "Method": "CalcularValorLiquido",
+    "RelativePath": "api/CDB/calcular-valor-liquido",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "B3.CDB.WebApi.Controllers.CalculoCDBRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Decimal",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  }
+]
